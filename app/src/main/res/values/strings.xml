@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="sign_in">Sign In</string>
+    <string name="peternity_webshop">Peternity Webshop</string>
+    <string name="e_mail">E-mail</string>
+    <string name="name">Name</string>
+    <string name="sign_up">Sign Up!</string>
 </resources>
