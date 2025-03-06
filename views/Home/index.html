@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peternity - Magyar Vegyesbolt Webshop</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4daa57;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+            --error-color: #d9534f;
+            --success-color: #5cb85c;
+            --warning-color: #f0ad4e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+
+        /* User actions bar */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-actions a {
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-actions a:hover {
+            color: var(--accent-color);
+        }
+
+        .user-actions .btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white !important;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5a8c;
+            color: white !important;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color) !important;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white !important;
+        }
+
+        /* Hero section */
+        .hero {
+            background: linear-gradient(to right, rgba(74, 111, 165, 0.9), rgba(22, 96, 136, 0.8)), url('/api/placeholder/1200/400') center/cover;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .search-bar button {
+            padding: 15px 25px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .search-bar button:hover {
+            background-color: #3c8d46;
+        }
+
+        /* Featured categories */
+        .featured-categories {
+            padding: 50px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            display: inline-block;
+            background-color: #f8f9fa;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            color: var(--secondary-color);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+            z-index: 0;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark-color);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-img {
+            height: 150px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--primary-color);
+        }
+
+        .category-info {
+            padding: 15px;
+        }
+
+        .category-info h3 {
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .category-info p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Product grid */
+        .products-section {
+            padding: 50px 0;
+            background-color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img {
+            height: 200px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .product-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .product-actions button {
+            background-color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #777;
+            transition: all 0.3s ease;
+        }
+
+        .product-actions button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-info h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: var(--dark-color);
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price-old {
+            text-decoration: line-through;
+            color: #aaa;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .product-seller {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product-seller img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background-color: #eee;
+        }
+
+        .product-footer {
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .product-footer button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background-color: white;
+            cursor: pointer;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .product-footer button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .product-footer button:first-child {
+            border-right: 1px solid #eee;
+        }
+
+        /* Auth forms */
+        .auth-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .close-form {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Product upload modal */
+        .upload-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .upload-content h2 {
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+
+        .upload-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .image-uploader {
+            border: 2px dashed #ddd;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .image-uploader:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-col h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+            padding-top: 20px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        /* Media queries */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                order: 3;
+            }
+
+            .nav-links {
+                flex-basis: 100%;
+                flex-direction: column;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                order: 4;
+            }
+
+            .nav-links.active {
+                max-height: 300px;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .user-actions {
+                margin-left: auto;
+                margin-right: 20px;
+            }
+
+            .user-actions .text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .search-bar {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+
+            .search-bar input, .search-bar button {
+                width: 100%;
+                border-radius: 0;
+            }
+
+            .product-footer {
+                flex-direction: column;
+            }
+
+            .product-footer button:first-child {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-container container">
+        <a href="#" class="logo">
+            Peter<span>nity</span>
+        </a>
+
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+
+        <div class="user-actions">
+            <a href="#" onclick="showLogin()">
+                <div>👤</div>
+                <span class="text">Belépés</span>
+            </a>
+            <a href="#" onclick="showRegister()">
+                <button class="btn btn-primary">Regisztráció</button>
+            </a>
+            <a href="#" onclick="showCart()">
+                <div>🛒</div>
+                <span class="text">Kosár</span>
+            </a>
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#">Főoldal</a></li>
+            <li><a href="#">Kategóriák</a></li>
+            <li><a href="#">Népszerű</a></li>
+            <li><a href="#">Akciók</a></li>
+            <li><a href="#">Rólunk</a></li>
+            <li><a href="#">Kapcsolat</a></li>
+        </ul>
+    </div>
+</header>
+
+<!-- Hero section -->
+<section class="hero">
+    <div class="container">
+        <h1>Üdvözölünk a Peternity webshopban!</h1>
+        <p>Böngéssz ezerféle terméket, vagy adj el sajátot gyorsan és egyszerűen Magyarország kedvenc vegyesboltjában</p>
+        <div class="search-bar">
+            <input type="text" placeholder="Mire van szükséged ma?">
+            <button>Keresés</button>
+        </div>
+    </div>
+</section>
+
+<!-- Featured categories -->
+<section class="featured-categories">
+    <div class="container">
+        <div class="section-title">
+            <h2>Népszerű kategóriák</h2>
+        </div>
+        <div class="categories-grid">
+            <a href="#" class="category-card">
+                <div class="category-img">🏠</div>
+                <div class="category-info">
+                    <h3>Otthon és kert</h3>
+                    <p>1205 termék</p>
+                </div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-img">👕</div>
+                <div class="category-info">
+                    <h3>Ruházat</h3>
+                    <p>843 termék</p>
+                </div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-img">📱</div>
+                <div class="category-info">
+                    <h3>Elektronika</h3>
+                    <p>684 termék</p>
+                </div>
+            </a>
+            <a href="#" class="category-card">
+                <div class="category-img">🎮</div>
+                <div class="category-info">
+                    <h3>Játékok</h3>
+                    <p>427 termék</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Products grid -->
+<section class="products-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Kiemelt termékek</h2>
+        </div>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="/api/placeholder/250/200" alt="Product">
+                    <div class="product-badge">Új</div>
+                    <div class="product-actions">
+                        <button title="Kedvencekhez">❤️</button>
+                        <button title="Gyorsnézet">👁️</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>IKEA Stílus Íróasztal Fehér</h3>
+                    <div class="product-price">
+                        <div>
+                            <span class="price-old">39 990 Ft</span>
+                            34 990 Ft
+                        </div>
+                        <small>Akció: -15%</small>
+                    </div>
+                    <div class="product-seller">
+                        <img src="/api/placeholder/24/24" alt="Seller">
+                        <span>BútorokMindenkinek</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <button onclick="makeOffer(1)">Ajánlatot teszek</button>
+                    <button onclick="addToCart(1)">Kosárba</button>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="/api/placeholder/250/200" alt="Product">
+                    <div class="product-actions">
+                        <button title="Kedvencekhez">❤️</button>
+                        <button title="Gyorsnézet">👁️</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Samsung Galaxy S20 FE - Használt</h3>
+                    <div class="product-price">
+                        <div>
+                            75 000 Ft
+                        </div>
+                        <small>Alkuképes</small>
+                    </div>
+                    <div class="product-seller">
+                        <img src="/api/placeholder/24/24" alt="Seller">
+                        <span>TechProfi</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <button onclick="makeOffer(2)">Ajánlatot teszek</button>
+                    <button onclick="addToCart(2)">Kosárba</button>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="/api/placeholder/250/200" alt="Product">
+                    <div class="product-badge">Népszerű</div>
+                    <div class="product-actions">
+                        <button title="Kedvencekhez">❤️</button>
+                        <button title="Gyorsnézet">👁️</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Vintage bőr táska - kézműves</h3>
+                    <div class="product-price">
+                        <div>
+                            22 500 Ft
+                        </div>
+                        <small>Ingyenes szállítás</small>
+                    </div>
+                    <div class="product-seller">
+                        <img src="/api/placeholder/24/24" alt="Seller">
+                        <span>KézművesMűhely</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <button onclick="makeOffer(3)">Ajánlatot teszek</button>
+                    <button onclick="addToCart(3)">Kosárba</button>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="/api/placeholder/250/200" alt="Product">
+                    <div class="product-actions">
+                        <button title="Kedvencekhez">❤️</button>
+                        <button title="Gyorsnézet">👁️</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>PlayStation 5 kontroller - fekete</h3>
+                    <div class="product-price">
+                        <div>
+                            28 900 Ft
+                        </div>
+                        <small>Utolsó 2 db</small>
+                    </div>
+                    <div class="product-seller">
+                        <img src="/api/placeholder/24/24" alt="Seller">
+                        <span>GameZona</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <button onclick="makeOffer(4)">Ajánlatot teszek</button>
+                    <button onclick="addToCart(4)">Kosárba</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Login form modal -->
+<div class="auth-container" id="loginForm">
+    <div class="auth-form">
+        <button class="close-form" onclick="hideLogin()">✕</button>
+        <h2>Bejelentkezés</h2>
+        <form>
+            <div class="form-group">
+                <label for="login-email">Email cím</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Jelszó</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">Bejelentkezés</button>
+
+            <div class="form-footer">
+                <p>Nincs még fiókod? <a href="#" onclick="showRegister(); hideLogin();">Regisztrálj most!</a></p>
+                <p><a href="#">Elfelejtetted a jelszavad?</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Register form modal -->
+<div class="auth-container" id="registerForm">
+    <div class="auth-form">
+        <button class="close-form" onclick="hideRegister()">✕</button>
+        <h2>Regisztráció</h2>
+        <form>
+            <div class="form-group">
+                <label for="register-name">Teljes név</label>
+                <input type="text" id="register-name" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email cím</label>
+                <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Jelszó</label>
+                <input type="password" id="register-password" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password-confirm">Jelszó újra</label>
+                <input type="password" id="register-password-confirm" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">Regisztráció</button>
+
+            <div class="form-footer">
+                <p>Már van fiókod? <a href="#" onclick="showLogin(); hideRegister();">Jelentkezz be!</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Product upload modal -->
+<div class="upload-form" id="uploadForm">
+    <div class="upload-content">
+        <button class="close-form" onclick="hideUpload()">✕</button>
+        <h2>Új termék feltöltése</h2>
+        <form>
+            <div class="form-group">
+                <label for="product-title">Termék neve</label>
+                <input type="text" id="product-title" placeholder="Pl.: Samsung Galaxy S21 - Fekete, 128GB" required>
+            </div>
+
+            <div class="form-group">
+                <label for="product-category">Kategória</label>
+                <select id="product-category" required>
+                    <option value="">Válassz kategóriát</option>
+                    <option value="electronics">Elektronika</option>
+                    <option value="fashion">Ruházat</option>
+                    <option value="home">Otthon és kert</option>
+                    <option value="toys">Játékok és hobbi</option>
+                    <option value="beauty">Szépségápolás</option>
+                    <option value="sports">Sport és szabadidő</option>
+                    <option value="books">Könyvek és média</option>
+                    <option value="other">Egyéb</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="product-price">Ár (alkudható)</label>
+                <input type="number" id="product-price" placeholder="0,00 Ft" required>
+                <label for="minimum-price">Minimum ár (nem alkudható, ennyit legalább fizetniük kell)</label>
+                <input type="number" id="minimum-price" required>
+            </div>
+            <input type="submit" value="Közzététel">
+        </form>
+    </div>
+</div>
+</body>
+</html>
