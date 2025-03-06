@@ -740,4 +740,77 @@ const OfferService = {
 
       // Egyéb ajánlatok elutasítása ugyanerre a termékre
       db.offers.forEach(otherOffer => {
-        if (otherOffer.id !== offerId && otherOffer.productId === offer.productId && ['pending', 'coun
+              if (otherOffer.id !== offerId && otherOffer.productId === offer.productId && ['pending', 'countered'].includes(otherOffer.status)) {
+                otherOffer.status = 'rejected';
+                otherOffer.responseMessage = 'Egy másik ajánlat elfogadásra került.';
+              }
+            });
+
+            // Termék státuszának frissítése
+            product.status = 'sold';
+            product.buyerId = offer.buyerId;
+            product.soldAt = new Date();
+
+            // Értesítés küldése a vásárlónak (valós rendszerben)
+            // notificationService.sendOfferAcceptedNotification(offer.buyerId, offer);
+
+            return {
+              success: true,
+              message: 'Ajánlat elfogadva!',
+              offer: offer
+            };
+          } else if (action === 'reject') {
+            // Ajánlat elutasítása
+            offer.status = 'rejected';
+
+            // Opcionális válaszüzenet
+            if (data.message) {
+              offer.responseMessage = data.message;
+            }
+
+            // Értesítés küldése a vásárlónak (valós rendszerben)
+            // notificationService.sendOfferRejectedNotification(offer.buyerId, offer);
+
+            return {
+              success: true,
+              message: 'Ajánlat elutasítva!',
+              offer: offer
+            };
+          } else if (action === 'counter') {
+            // Viszontajánlat ellenőrzése
+            if (!data.amount || isNaN(data.amount) || data.amount <= 0) {
+              return createError('A viszontajánlati ár pozitív szám kell legyen!', 400);
+            }
+
+            // Maximum viszontajánlat ellenőrzése (eredeti ár 120%-a)
+            const maxCounterAmount = product.price * 1.2;
+            if (data.amount > maxCounterAmount) {
+              return createError(`A viszontajánlati ár maximum ${maxCounterAmount} Ft lehet!`, 400);
+            }
+
+            // Viszontajánlat rögzítése
+            offer.status = 'countered';
+            offer.counterOffer = data.amount;
+
+            // Opcionális válaszüzenet
+            if (data.message) {
+              offer.responseMessage = data.message;
+            }
+
+            // Értesítés küldése a vásárlónak (valós rendszerben)
+            // notificationService.sendCounterOfferNotification(offer.buyerId, offer);
+
+            return {
+              success: true,
+              message: 'Viszontajánlat elküldve!',
+              offer: offer
+            };
+          } else {
+            return createError('Érvénytelen művelet!', 400);
+          }
+        },
+
+        /**
+         * Ajánlatok lekérdezése egy felhasználóhoz
+         * @param {string} userId - A felhasználó azonosítója
+       
